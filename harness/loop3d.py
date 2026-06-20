@@ -13,7 +13,7 @@ DT = 1.0 / 50.0
 TICK_BUDGET_MS = 50.0
 
 def load_firmware_class_3d(version: str):
-    mod_name = f"firmware.firmware_{version}_3d"
+    mod_name = f"firmware.firmware_{version}"
     if mod_name in __import__("sys").modules:
         mod = importlib.reload(__import__("sys").modules[mod_name])
     else:
