@@ -5,7 +5,7 @@ GOAL_X, GOAL_Y = 18.0, 13.0
 
 class Firmware:
     def __init__(self) -> None:
-        self._last_forward = 4.0
+        pass
 
     def step(self, sensors: SensorPacket) -> MotorCommand:
         px, py = sensors.pos_estimate
@@ -14,7 +14,6 @@ class Firmware:
         ux, uy = dx / norm, dy / norm
 
         forward = sensors.rays[0]
-        self._last_forward = forward
 
         if forward < 1.0:
             # naive brake — does NOT steer around diagonal obstacles

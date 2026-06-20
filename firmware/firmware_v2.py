@@ -7,7 +7,7 @@ REPULSION_GAIN = 1.5
 ATTRACTION_GAIN = 0.8
 
 # Stuck-detection / escape (Option A: smoothed checkpoint + perpendicular bias)
-SMOOTH_ALPHA = 0.02        # slow IIR filter — tracks 50-tick average position
+SMOOTH_ALPHA = 0.02   # IIR pole ~exp(-0.02); effective ~50-tick (1 s @ 50 Hz) window
 STUCK_CHECK_INTERVAL = 50  # ticks between progress checks (~1s at 50Hz)
 STUCK_GUARD_TICKS = 250    # don't check before this tick (~5s) — avoid startup fp
 STUCK_DISP_THR = 0.25      # smoothed-position net displacement threshold

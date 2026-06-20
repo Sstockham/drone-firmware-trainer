@@ -28,6 +28,4 @@ def format_result(r: RunResult) -> str:
 def summarize_sweep(results: list[RunResult]) -> str:
     n = len(results)
     wins = sum(1 for r in results if r.outcome is Outcome.SUCCESS)
-    lines = [format_result(r) for r in results]
-    lines.append(f"--- {wins}/{n} success ---")
-    return "\n".join(lines)
+    return f"--- {wins}/{n} success ---"

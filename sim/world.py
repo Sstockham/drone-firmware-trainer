@@ -1,5 +1,5 @@
 import random
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 ARENA_W = 20.0
 ARENA_H = 15.0
