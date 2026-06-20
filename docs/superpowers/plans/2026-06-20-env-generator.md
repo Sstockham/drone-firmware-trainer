@@ -1201,7 +1201,10 @@ Replace the README via Python (no BOM, no BEL):
 
 ```python
 import pathlib
-content = '''# Drone Firmware Trainer
+# Raw triple-quoted string so `\S`, `\a`, etc. are literal — no Python
+# escape processing inside. This sidesteps both the BEL bug (\a -> 0x07)
+# and the over-escape bug (\\\\ -> \\) that bit the 2D/3D shipping cycles.
+content = r'''# Drone Firmware Trainer
 
 2D and 3D obstacle-avoidance training harness for autonomous drone firmware,
 with five 3D world themes (`demo`, `forest`, `warehouse`, `canyon`, `city`)
@@ -1216,7 +1219,7 @@ crash isolation, no global state, tick-time budget.
 ## Install
 
     python -m venv .venv
-    .venv\\\\Scripts\\\\activate
+    .venv\Scripts\activate
     pip install -r requirements.txt
 
 ## 2D Demo
@@ -1280,7 +1283,7 @@ pathlib.Path('README.md').write_text(content, encoding='utf-8')
 print('README written, first 5 bytes:', pathlib.Path('README.md').read_bytes()[:5])
 ```
 
-Notice the **quadruple-backslash** `\\\\Scripts\\\\activate` in the Python source: inside the triple-quoted string, `\\\\` collapses to `\\`, and that `\\` on disk reads as a single `\`. The result is `.venv\Scripts\activate` on disk. This avoids both BOM (we're using Python's `write_text`) and BEL (the literal `\a` never appears in the Python source). Verify after writing:
+Notice the `r'''...'''` raw triple-quoted string: Python does not process escape sequences inside it, so `\Scripts\activate` is written to disk byte-for-byte as-is. No BOM (Python's `write_text` does not emit one), no BEL (the `\a` is never interpreted), no over-escape (no `\\\\` confusion). Verify after writing:
 
 ```powershell
 .venv\Scripts\python.exe -c "import pathlib; data = pathlib.Path('README.md').read_bytes(); assert b'\x07' not in data, 'BEL byte present'; assert b'Scripts\\activate' in data, 'Scripts\\activate not literal'; print('README byte check OK; first 5 bytes:', data[:5])"
