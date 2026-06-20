@@ -1,4 +1,4 @@
-﻿# Drone Firmware Trainer
+# Drone Firmware Trainer
 
 2D obstacle-avoidance training harness for autonomous drone firmware.
 
