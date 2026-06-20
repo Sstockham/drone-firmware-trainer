@@ -1,2 +1,3 @@
 pygame==2.5.2
 numpy==1.26.4
+raylib-py==5.5.0
