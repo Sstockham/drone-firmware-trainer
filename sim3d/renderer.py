@@ -124,8 +124,16 @@ class Renderer3D:
         }
 
     def _project(self, world_pos: rl.Vector3) -> tuple:
-        sp = rl.get_world_to_screen(world_pos, self.camera)
-        on_screen = 0 <= sp.x < WINDOW_W and 0 <= sp.y < WINDOW_H
+        cam = self.camera
+        fx = cam.target.x - cam.position.x
+        fy = cam.target.y - cam.position.y
+        fz = cam.target.z - cam.position.z
+        wx = world_pos.x - cam.position.x
+        wy = world_pos.y - cam.position.y
+        wz = world_pos.z - cam.position.z
+        in_front = (fx * wx + fy * wy + fz * wz) > 0
+        sp = rl.get_world_to_screen(world_pos, cam)
+        on_screen = in_front and 0 <= sp.x < WINDOW_W and 0 <= sp.y < WINDOW_H
         return int(sp.x), int(sp.y), on_screen
 
     def _draw_hud(self, drone: DroneState3D, packet: SensorPacket3D, fw) -> None:
@@ -143,7 +151,7 @@ class Renderer3D:
             x = cx + deg_offset * 6
             rl.draw_line(x, tape_y + 10, x, tape_y + 20, HUD_COLOR)
             if deg_offset % 30 == 0:
-                label = {0: "N", 90: "E", 180: "S", 270: "W"}.get(int(ang_deg), f"{int(ang_deg):03d}")
+                label = {0: "N", 90: "E", 180: "S", 270: "W"}.get(int(round(ang_deg)) % 360, f"{int(ang_deg):03d}")
                 rl.draw_text(label.encode(), x - 12, tape_y - 8, 14, HUD_COLOR)
         rl.draw_text(f"{int(yaw_deg):03d}".encode(), cx - 18, tape_y + 24, 16, HUD_COLOR)
         # Altitude tape (right)

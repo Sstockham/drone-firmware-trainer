@@ -9,6 +9,7 @@ SWEEP_SEEDS = [42, 7, 13, 99, 256]
 def _make_render_cb(world, cam: str):
     from sim3d.renderer import Renderer3D
     r = Renderer3D(world)
+    r._cam_mode = cam
     def cb(drone, packet, cmd, fw):
         r.draw(drone, packet, cmd, fw)
     return cb, r
