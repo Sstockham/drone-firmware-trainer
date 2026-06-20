@@ -28,6 +28,7 @@ def run_episode(world: World, firmware_obj, seed: int, max_t: float = 30.0, rend
     min_clr = float("inf")
     outcome = Outcome.TIMEOUT
     fault_msg: str | None = None
+    next_wall = time.perf_counter() if render_cb is not None else None
 
     while drone.t < max_t:
         packet = build_sensor_packet(drone, world.obstacles, DT, rng)
@@ -55,6 +56,12 @@ def run_episode(world: World, firmware_obj, seed: int, max_t: float = 30.0, rend
 
         if render_cb is not None:
             render_cb(drone, packet, cmd)
+            next_wall += DT
+            slack = next_wall - time.perf_counter()
+            if slack > 0:
+                time.sleep(slack)
+            else:
+                next_wall = time.perf_counter()
 
         gx, gy = world.goal_center
         if math.hypot(drone.x - gx, drone.y - gy) <= world.goal_radius:
