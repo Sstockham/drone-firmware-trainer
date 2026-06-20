@@ -67,5 +67,31 @@ class Renderer:
 
         pygame.display.flip()
 
+    def hold(self, banner: str) -> None:
+        big = pygame.font.SysFont("consolas", 28, bold=True)
+        small = pygame.font.SysFont("consolas", 16)
+        text = big.render(banner, True, BLACK)
+        hint = small.render("press any key or close window to exit", True, BLACK)
+        tw, th = text.get_size()
+        hw, hh = hint.get_size()
+        pad = 14
+        box_w = max(tw, hw) + pad * 2
+        box_h = th + hh + pad * 3
+        box_x = (self.w_px - box_w) // 2
+        box_y = (self.h_px - box_h) // 2
+        try:
+            pygame.draw.rect(self.screen, WHITE, (box_x, box_y, box_w, box_h))
+            pygame.draw.rect(self.screen, BLACK, (box_x, box_y, box_w, box_h), 2)
+            self.screen.blit(text, (box_x + (box_w - tw) // 2, box_y + pad))
+            self.screen.blit(hint, (box_x + (box_w - hw) // 2, box_y + pad * 2 + th))
+            pygame.display.flip()
+            while True:
+                for ev in pygame.event.get():
+                    if ev.type in (pygame.QUIT, pygame.KEYDOWN, pygame.MOUSEBUTTONDOWN):
+                        return
+                time.sleep(0.02)
+        except pygame.error:
+            return
+
     def close(self) -> None:
         pygame.quit()

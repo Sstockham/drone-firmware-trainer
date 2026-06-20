@@ -23,6 +23,9 @@ def _run_one(version: str, seed: int, render: bool):
         cb, r = _make_render_cb(world)
     try:
         result = run_episode(world, fw, seed=seed, render_cb=cb)
+        if r is not None:
+            banner = f"{result.outcome.value}  t={result.t_end:.2f}s  seed={seed}  fw={version}"
+            r.hold(banner)
     finally:
         if r is not None:
             r.close()
