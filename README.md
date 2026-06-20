@@ -7,7 +7,7 @@ The firmware module is a Python class with a fixed contract (`SensorPacket` in, 
 ## Install
 
     python -m venv .venv
-    .venv\Scriptsctivate
+    .venv\Scripts\activate
     pip install -r requirements.txt
 
 ## Demo
